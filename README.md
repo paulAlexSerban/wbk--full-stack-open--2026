@@ -1,31 +1,8 @@
-# Full Stack Open 2026
+# Full Stack Open 2026 - Submissions
 
-## Part 0
+This repository contains my exercises for the [Full Stack Open](https://fullstackopen.com/en) course from the University of Helsinki.
 
-## Part 1
-
-## Part 2
-
-## Part 3
-
-## Part 4
-
-## Part 5
-
-## Part 6
-
-## Part 7
-
-## Part 8
-
-## Part 9
-
-## Part 10
-
-## Part 11
-
-## Part 12
-
-## Part 13
-
-## Part 14
+## Technologies Used
+* HTML/CSS
+* JavaScript
+* Mermaid.js (for sequence diagrams)
