@@ -7,7 +7,11 @@ const App = () => {
 
   return (
     <div>
-      code here
+      <div>
+      <button></button>
+      <button></button>
+      <button></button>
+      </div>
     </div>
   )
 }
