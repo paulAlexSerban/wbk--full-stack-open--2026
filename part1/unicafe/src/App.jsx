@@ -1,9 +1,10 @@
 import { useState } from "react";
 
 const StatisticLine = ({ text, value }) => (
-  <li>
-    {text}: {value}
-  </li>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 const Statistics = ({ good, neutral, bad }) => {
@@ -24,14 +25,16 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
       <h2>statistics</h2>
-      <ul>
-        <StatisticLine text="good" value={good} />
-        <StatisticLine text="neutral" value={neutral} />
-        <StatisticLine text="bad" value={bad} />
-        <StatisticLine text="all" value={all} />
-        <StatisticLine text="average" value={average.toFixed(1)} />
-        <StatisticLine text="positive" value={positive.toFixed(1) + " %"} />
-      </ul>
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={all} />
+          <StatisticLine text="average" value={average.toFixed(1)} />
+          <StatisticLine text="positive" value={positive.toFixed(1) + " %"} />
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -43,12 +46,10 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <h2>give feedback</h2>
-        <button onClick={() => setGood(good + 1)}>good</button>
-        <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-        <button onClick={() => setBad(bad + 1)}>bad</button>
-      </div>
+      <h2>give feedback</h2>
+      <button onClick={() => setGood(good + 1)}>good</button>
+      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
+      <button onClick={() => setBad(bad + 1)}>bad</button>
 
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
