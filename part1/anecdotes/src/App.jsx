@@ -21,17 +21,31 @@ const App = () => {
   };
 
   const handleVote = () => {
-    const newVotes = [...votes];
-    newVotes[selected] += 1;
-    setVotes(newVotes);
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
   };
+
+  const maxVotes = Math.max(...votes);
+  const mostVotesIndex = votes.indexOf(maxVotes);
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNextAnecdote}>next anecdote</button>
+
+      <h2>Anecdote with most votes</h2>
+      {maxVotes === 0 ? (
+        <p>No votes cast yet</p>
+      ) : (
+        <div>
+          <p>{anecdotes[mostVotesIndex]}</p>
+          <p>has {maxVotes} votes</p>
+        </div>
+      )}
     </div>
   );
 };
