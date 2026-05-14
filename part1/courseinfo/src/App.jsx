@@ -15,7 +15,7 @@ const App = () => {
 
   return (
     <div>
-      <Header title={course.name} />
+      <Header course={course.name} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
     </div>
