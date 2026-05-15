@@ -24,6 +24,11 @@
       "name": "Paul Serban",
       "number": "+40 7223230633",
       "id": "9D3vSPbVl90"
+    },
+    {
+      "name": "John Doe",
+      "number": "+12 123312111",
+      "id": "CLI2vzYC4Nc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

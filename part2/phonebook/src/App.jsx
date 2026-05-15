@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 
 import Filter from "./components/filter";
 import PersonForm from "./components/pearsonForm";
 import Persons from "./components/persons";
-
-const API_ENDPOINT = "http://localhost:3001/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -14,8 +12,8 @@ const App = () => {
   const [filterQuery, setFilterQuery] = useState("");
 
   useEffect(() => {
-    axios.get(API_ENDPOINT).then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -40,13 +38,11 @@ const App = () => {
       number: newNumber,
     };
 
-    axios
-      .post(API_ENDPOINT, personObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
-        setNewName("");
-        setNewNumber("");
-      });
+    personService.create(personObject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const personsToShow = persons.filter((person) =>
