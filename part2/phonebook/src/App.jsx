@@ -45,6 +45,20 @@ const App = () => {
     });
   };
 
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          alert(`The contact '${name}' was already deleted from the server.`);
+          setPersons(persons.filter((person) => person.id !== id));
+        });
+    }
+  };
+
   const personsToShow = persons.filter((person) =>
     person.name.toLowerCase().includes(filterQuery.toLowerCase()),
   );
@@ -64,7 +78,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} deletePerson={handleDelete} />
     </div>
   );
 };
