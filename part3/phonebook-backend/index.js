@@ -28,12 +28,22 @@ app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
 
+app.get("/api/persons/:id", (req, res) => {
+  const person = persons.find((p) => p.id === req.params.id);
+
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).json({ error: "Person not found" });
+  }
+});
+
 app.get("/info", (req, res) => {
-  const requestTime = new Date();
-  const phonebookCount = persons.length;
+  const requestTime = new Date().toString();
+  const personCount = persons.length;
 
   const html = `
-    <p>Phonebook has info for ${phonebookCount} people</p>
+    <p>Phonebook has info for ${personCount} people</p>
     <p>${requestTime}</p>
   `;
 
