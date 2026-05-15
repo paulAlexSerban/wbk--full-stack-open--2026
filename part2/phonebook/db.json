@@ -27,8 +27,8 @@
     },
     {
       "name": "John Doe",
-      "number": "+99 123 321 456",
-      "id": "4Q68wnRXWks"
+      "number": "+213 12333123",
+      "id": "c09idAkeelI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

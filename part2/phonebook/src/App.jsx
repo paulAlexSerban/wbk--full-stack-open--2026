@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
-  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -22,6 +22,13 @@ const App = () => {
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
   const handleFilterChange = (event) => setFilterQuery(event.target.value);
+
+  const showNotification = (text, type = "success") => {
+    setNotification({ text, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -48,15 +55,12 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
-
-            setNotificationMessage(`Updated ${returnedPerson.name}'s number`);
-            setTimeout(() => {
-              setNotificationMessage(null);
-            }, 5000);
+            showNotification(`Updated number for ${returnedPerson.name}`);
           })
           .catch((error) => {
-            alert(
-              `The contact '${existingPerson.name}' was already removed from the server.`,
+            showNotification(
+              `Information of '${existingPerson.name}' has already been removed from server`,
+              "error",
             );
             setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
@@ -73,11 +77,7 @@ const App = () => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
-      setNotificationMessage(`Added ${returnedPerson.name}`);
-
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
+      showNotification(`Added ${returnedPerson.name}`);
     });
   };
 
@@ -87,9 +87,13 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
+          showNotification(`Deleted ${name}`);
         })
         .catch((error) => {
-          alert(`The contact '${name}' was already deleted from the server.`);
+          showNotification(
+            `Information of '${name}' has already been removed from server`,
+            "error",
+          );
           setPersons(persons.filter((person) => person.id !== id));
         });
     }
@@ -102,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notification} />
       <Filter value={filterQuery} onChange={handleFilterChange} />
 
       <h3>Add a new</h3>
