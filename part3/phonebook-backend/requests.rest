@@ -1,13 +1,43 @@
-GET http://localhost:3001/info
-
-###
-
+### Get all persons
 GET http://localhost:3001/api/persons
 
-###
+### Get single person (existing)
+GET http://localhost:3001/api/persons/1
 
-GET http://localhost:3001/api/persons/2
+### Get single person (non-existent)
+GET http://localhost:3001/api/persons/99
 
-###
+### Get info page
+GET http://localhost:3001/info
 
+### Create new person - SUCCESS
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "number": "040-123456"
+}
+
+### Create new person - MISSING FIELD
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Jane Smith"
+}
+
+### Create new person - DUPLICATE NAME
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Arto Hellas",
+  "number": "999-999-9999"
+}
+
+### Delete existing person
 DELETE http://localhost:3001/api/persons/2
+
+### Delete non-existent person
+DELETE http://localhost:3001/api/persons/99
