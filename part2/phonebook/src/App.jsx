@@ -24,12 +24,36 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
 
-    const nameExists = persons.some(
+    const existingPerson = persons.find(
       (person) => person.name.toLowerCase() === newName.trim().toLowerCase(),
     );
 
-    if (nameExists) {
-      alert(`${newName} is already added to phonebook`);
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`,
+      );
+
+      if (confirmUpdate) {
+        const changedPerson = { ...existingPerson, number: newNumber };
+
+        personService
+          .update(existingPerson.id, changedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== existingPerson.id ? person : returnedPerson,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            alert(
+              `The contact '${existingPerson.name}' was already removed from the server.`,
+            );
+            setPersons(persons.filter((p) => p.id !== existingPerson.id));
+          });
+      }
       return;
     }
 
