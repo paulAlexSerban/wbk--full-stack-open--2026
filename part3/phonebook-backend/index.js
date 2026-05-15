@@ -1,7 +1,17 @@
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
+const dotenv = require('dotenv');
+
+dotenv.config()
+
 const app = express();
 
+const FE_ORIGIN = process.env.FE_ORIGIN;
+
+app.use(cors({
+  origin: FE_ORIGIN
+}));
 app.use(express.json());
 
 morgan.token("body", (req, res) => {
