@@ -3,7 +3,7 @@ const Total = ({ parts }) => {
     return sum + part.exercises;
   }, 0);
 
-  return <p>Numer of exercises: {totalExercises}</p>;
+  return <p className='total'>total of {totalExercises} exercises</p>;
 };
 
 export default Total;
