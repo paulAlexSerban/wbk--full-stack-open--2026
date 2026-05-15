@@ -4,12 +4,14 @@ import personService from "./services/persons";
 import Filter from "./components/filter";
 import PersonForm from "./components/pearsonForm";
 import Persons from "./components/persons";
+import Notification from "./components/notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -46,6 +48,11 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+
+            setNotificationMessage(`Updated ${returnedPerson.name}'s number`);
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 5000);
           })
           .catch((error) => {
             alert(
@@ -66,6 +73,11 @@ const App = () => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
+      setNotificationMessage(`Added ${returnedPerson.name}`);
+
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
     });
   };
 
@@ -90,6 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter value={filterQuery} onChange={handleFilterChange} />
 
       <h3>Add a new</h3>
