@@ -46,6 +46,12 @@ let persons = [
   },
 ];
 
+app.get("/api/debug", (req, res) => {
+  res.json({
+    env_vars: process.env
+  })
+})
+
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
