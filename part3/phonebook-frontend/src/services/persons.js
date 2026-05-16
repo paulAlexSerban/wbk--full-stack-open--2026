@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || process.env.RENDER_EXTERNAL_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const BASE_URL = `${API_URL}/persons`
 
