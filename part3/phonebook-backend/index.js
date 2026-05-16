@@ -17,6 +17,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use(express.static('dist'))
+
 morgan.token("body", (req, res) => {
   if (req.method === "POST") {
     return JSON.stringify(req.body);
@@ -112,6 +114,13 @@ app.delete("/api/persons/:id", (req, res) => {
   }
 });
 
+app.get("/health", (req,res) => {
+    res.status(200).json({
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      version: process.env.APP_VERSION ?? "unknown",
+    });
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on ${EXTERNAL_URL} with internal port ${PORT}`);

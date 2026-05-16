@@ -6,12 +6,11 @@
 ```
 PORT=3001
 NODE_ENV=development
-FE_ORIGIN=http://localhost:5173
 ```
 
 ### Production (Render Dashboard)
 - `NODE_ENV` = `production`
-- `FE_ORIGIN` = Your frontend URL (e.g., https://your-app.onrender.com)
+- `VITE_API_URL` = Your API endpoint URL
 
 **Note:** Render automatically sets `PORT` to `10000` on the free tier.
 
