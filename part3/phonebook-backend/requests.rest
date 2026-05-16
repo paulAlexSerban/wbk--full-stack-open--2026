@@ -1,14 +1,14 @@
-# @BASE_URL=http://localhost:3001
-@BASE_URL=https://phonebook-backend-fso-2026-part3.onrender.com
+@BASE_URL=http://localhost:3001
+# @BASE_URL=https://phonebook-backend-fso-2026-part3.onrender.com
 
 ### Get all persons
 GET {{BASE_URL}}/api/persons
 
 ### Get single person (existing)
-GET {{BASE_URL}}/api/persons/1
+GET {{BASE_URL}}/api/persons/6a08cba445804f3f575b02a0
 
 ### Get single person (non-existent)
-GET {{BASE_URL}}/api/persons/99
+GET {{BASE_URL}}/api/persons/6a08cba445804f3f575b02a1
 
 ### Get info page
 GET {{BASE_URL}}/info
@@ -40,7 +40,7 @@ Content-Type: application/json
 }
 
 ### Delete existing person
-DELETE {{BASE_URL}}/api/persons/116348
+DELETE {{BASE_URL}}/api/persons/6a08cb5845804f3f575b029c
 
 ### Delete non-existent person
 DELETE {{BASE_URL}}/api/persons/99

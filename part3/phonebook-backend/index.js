@@ -17,33 +17,24 @@ app.use(express.json());
 app.use(express.static("dist"));
 
 morgan.token("body", (req, res) => {
-  if (req.method === "POST") return JSON.stringify(req.body);
+  if (req.method === "POST" || req.method === "PUT")
+    return JSON.stringify(req.body);
   return "";
 });
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body"),
+);
 
-  if(error.name = "CastError") {
-    return response.status(400).send({ error: "Malformatted ID"})
-  }
-
-  next(error)
-}
-
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", (req, res, next) => {
   Person.find({})
     .then((persons) => {
       res.json(persons);
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: "Failed to fetch entries" });
-    });
+    .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
@@ -52,13 +43,10 @@ app.get("/api/persons/:id", (req, res) => {
         res.status(404).json({ error: "Person not found" });
       }
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(400).json({ error: "Malformatted ID" });
-    });
+    .catch((error) => next(error));
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", (req, res, next) => {
   const reqTime = new Date().toString();
 
   Person.countDocuments({})
@@ -69,43 +57,50 @@ app.get("/info", (req, res) => {
       `;
       res.send(html);
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error reading database metrics");
-    });
+    .catch((error) => next(error));
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const { name, number } = req.body;
 
   if (!name || !number) {
     return res.status(400).json({ error: "Name or number is missing" });
   }
 
-  Person.findOne({ name: name })
-    .then((existingPerson) => {
-      if (existingPerson) {
-        return res.status(400).json({
-          error: "The name already exists in the notebook",
-        });
-      }
+  const newPerson = new Person({
+    name,
+    number,
+  });
 
-      const newPerson = new Person({
-        name,
-        number,
-      });
-
-      return newPerson.save().then((savedPerson) => {
-        res.status(201).json(savedPerson);
-      });
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson);
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: "Database operation failed" });
-    });
+    .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
+
+  const personUpdates = { name, number };
+
+  Person.findByIdAndUpdate(req.params.id, personUpdates, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
+    .then((updatedPerson) => {
+      if (updatedPerson) {
+        res.json(updatedPerson);
+      } else {
+        res.status(404).json({ error: "Person not found" });
+      }
+    })
+    .catch((error) => next(error));
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then((result) => {
       if (result) {
@@ -114,10 +109,7 @@ app.delete("/api/persons/:id", (req, res) => {
         res.status(404).json({ error: "Person not found" });
       }
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(400).json({ error: "Malformatted ID" });
-    });
+    .catch((error) => next(error));
 });
 
 app.get("/health", (req, res) => {
@@ -128,7 +120,17 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use(errorHandler)
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "Malformatted ID" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on internal port ${PORT}`);
