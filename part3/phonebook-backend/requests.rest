@@ -1,17 +1,19 @@
+@BASE_URL=http://localhost:3001
+
 ### Get all persons
-GET http://localhost:3001/api/persons
+GET {{BASE_URL}}/api/persons
 
 ### Get single person (existing)
-GET http://localhost:3001/api/persons/1
+GET {{BASE_URL}}/api/persons/1
 
 ### Get single person (non-existent)
-GET http://localhost:3001/api/persons/99
+GET {{BASE_URL}}/api/persons/99
 
 ### Get info page
-GET http://localhost:3001/info
+GET {{BASE_URL}}/info
 
 ### Create new person - SUCCESS
-POST http://localhost:3001/api/persons
+POST {{BASE_URL}}/api/persons
 Content-Type: application/json
 
 {
@@ -20,7 +22,7 @@ Content-Type: application/json
 }
 
 ### Create new person - MISSING FIELD
-POST http://localhost:3001/api/persons
+POST {{BASE_URL}}/api/persons
 Content-Type: application/json
 
 {
@@ -28,7 +30,7 @@ Content-Type: application/json
 }
 
 ### Create new person - DUPLICATE NAME
-POST http://localhost:3001/api/persons
+POST {{BASE_URL}}/api/persons
 Content-Type: application/json
 
 {
@@ -37,7 +39,10 @@ Content-Type: application/json
 }
 
 ### Delete existing person
-DELETE http://localhost:3001/api/persons/2
+DELETE {{BASE_URL}}/api/persons/2
 
 ### Delete non-existent person
-DELETE http://localhost:3001/api/persons/99
+DELETE {{BASE_URL}}/api/persons/99
+
+### DEBUG
+GET {{BASE_URL}}/api/debug
