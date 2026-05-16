@@ -7,7 +7,10 @@ dotenv.config()
 
 const app = express();
 
-const FE_ORIGIN = process.env.FE_ORIGIN;
+const PORT = process.env.PORT || 3001;
+const NODE_ENV = process.env.NODE_ENV;
+const EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
+const FE_ORIGIN = EXTERNAL_URL || process.env.FE_ORIGIN;
 
 app.use(cors({
   origin: FE_ORIGIN
@@ -45,12 +48,6 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
-
-app.get("/api/debug", (req, res) => {
-  res.json({
-    env_vars: process.env
-  })
-})
 
 app.get("/api/persons", (req, res) => {
   res.json(persons);
@@ -115,7 +112,7 @@ app.delete("/api/persons/:id", (req, res) => {
   }
 });
 
-const PORT = 3001;
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${EXTERNAL_URL} with internal port ${PORT}`);
 });
