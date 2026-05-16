@@ -58,10 +58,8 @@ const App = () => {
             showNotification(`Updated number for ${returnedPerson.name}`);
           })
           .catch((error) => {
-            showNotification(
-              `Information of '${existingPerson.name}' has already been removed from server`,
-              "error",
-            );
+            const errorMessage = error.response.data.error || error.message;
+            showNotification(errorMessage, "error");
             setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
       }
@@ -73,12 +71,18 @@ const App = () => {
       number: newNumber,
     };
 
-    personService.create(personObject).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-      showNotification(`Added ${returnedPerson.name}`);
-    });
+    personService
+      .create(personObject)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+        showNotification(`Added ${returnedPerson.name}`);
+      })
+      .catch((error) => {
+        const errorMessage = error.response.data.error || error.message;
+        showNotification(errorMessage, "error");
+      });
   };
 
   const handleDelete = (id, name) => {
@@ -90,10 +94,8 @@ const App = () => {
           showNotification(`Deleted ${name}`);
         })
         .catch((error) => {
-          showNotification(
-            `Information of '${name}' has already been removed from server`,
-            "error",
-          );
+          const errorMessage = error.response.data.error || error.message;
+          showNotification(errorMessage, "error");
           setPersons(persons.filter((person) => person.id !== id));
         });
     }
