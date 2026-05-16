@@ -1,31 +1,32 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
 
-const MONGO_DB_USERBANE = process.env.MONGO_DB_USERBANE;
-const MONGODB_PASWORD = process.env.MONGODB_PASWORD;
-const MONGODB_ATLAS_CLUSTER = process.env.MONGODB_ATLAS_CLUSTER;
-const MONGODB_ATLAS_APP_NAME = process.env.MONGODB_ATLAS_APP_NAME;
+const MONGO_DB_USERBANE = process.env.MONGO_DB_USERBANE
+const MONGODB_PASWORD = process.env.MONGODB_PASWORD
+const MONGODB_ATLAS_CLUSTER = process.env.MONGODB_ATLAS_CLUSTER
+const MONGODB_ATLAS_APP_NAME = process.env.MONGODB_ATLAS_APP_NAME
 
-const DB_URL = `mongodb+srv://${MONGO_DB_USERBANE}:${MONGODB_PASWORD}@${MONGODB_ATLAS_CLUSTER}/phonebook?appName=${MONGODB_ATLAS_APP_NAME}&retryWrites=true&w=majority`;
+const DB_URL = `mongodb+srv://${MONGO_DB_USERBANE}:${MONGODB_PASWORD}@${MONGODB_ATLAS_CLUSTER}/phonebook?appName=${MONGODB_ATLAS_APP_NAME}&retryWrites=true&w=majority`
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false)
 
-console.log("Connecting to MongoDB...");
+console.log('Connecting to MongoDB...')
 mongoose
   .connect(DB_URL, { family: 4 })
   .then(() => {
-    console.log("Connected to MongoDB successfully");
+    console.log('Connected to MongoDB successfully')
   })
   .catch((error) => {
-    console.error("Error connecting to MongoDB:", error.message);
-  });
+    console.error('Error connecting to MongoDB:',
+      error.message)
+  })
 
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 3,
-    required: true
+    required: true,
   },
   number: {
     type: String,
@@ -33,15 +34,16 @@ const personSchema = new mongoose.Schema({
     validate: {
       validator: (value) => {
         if (value.length < 8) {
-          return false;
+          return false
         }
-        
-        return /^\d{2,3}-\d+$/.test(value);
+
+        return /^\d{2,3}-\d+$/.test(value)
       },
-      message: props => `${props.value} is not a valid phone number! It must be at least 8 characters long and formatted as XX-XXXXX or XXX-XXXXX.`
-    }
-  }
-});
+      message: (props) =>
+        `${props.value} is not a valid phone number! It must be at least 8 characters long and formatted as XX-XXXXX or XXX-XXXXX.`,
+    },
+  },
+})
 
 /**
  * `toJSON` Transform
@@ -66,14 +68,14 @@ const personSchema = new mongoose.Schema({
  * A more scalable option is to use DTO pattern with a DTO formatter
  */
 
-personSchema.set("toJSON", {
+personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
   },
-});
+})
 
-const Person = mongoose.model("Person", personSchema);
+const Person = mongoose.model('Person', personSchema)
 
-module.exports = { Person };
+module.exports = { Person }
