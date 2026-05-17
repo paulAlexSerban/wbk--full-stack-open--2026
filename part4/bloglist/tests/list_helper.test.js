@@ -8,7 +8,7 @@ const blogs = [
     'title':'Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/',
-    'likes': 4,
+    'likes': 1,
     __v: 0
   },
   {
@@ -24,15 +24,15 @@ const blogs = [
     'title':'3 Meta-Prompting Patterns for Enterprise-Grade Structured Outputs',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/3-meta-prompting-patterns-for-enterprise-grade-structured-outputs/',
-    'likes': 9,
+    'likes': 6,
     __v: 0
   },
   {
     _id: '5a422b3a1b54a676234d17f9',
-    'title':'Few-Shot Prompt Libraries: How to Build Reusable Examples that Don’t Rot',
+    'title':'Few-Shot Prompt Libraries: How to Build Reusable Examples that Don`t Rot',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/few-shot-prompt-libraries-how-to-build-reusable-examples-that-dont-rot/',
-    'likes': 9,
+    'likes': 15,
     __v: 0
   }
 ]
@@ -58,5 +58,36 @@ describe('total likes', () => {
   test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(blogs)
     assert.strictEqual(result, 27)
+  })
+
+
+})
+
+describe('favorite blog', () => {
+  test('of empty list is null', () => {
+    const result = listHelper.favoriteBlog([])
+    assert.strictEqual(result, null)
+  })
+
+  test('when list has only one blog, returns that blog', () => {
+    const listWithOneBlog = [blogs[0]]
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    assert.deepStrictEqual(result, blogs[0])
+  })
+
+  test('of a bigger list finds the blog with the most likes', () => {
+    const result = listHelper.favoriteBlog(blogs)
+
+
+    const expectedBlog =   {
+      _id: '5a422b3a1b54a676234d17f9',
+      'title':'Few-Shot Prompt Libraries: How to Build Reusable Examples that Don`t Rot',
+      'author':'Paul Serban',
+      'url':'https://paulserban.eu/blog/post/few-shot-prompt-libraries-how-to-build-reusable-examples-that-dont-rot/',
+      'likes': 15,
+      __v: 0
+    }
+
+    assert.deepStrictEqual(result, expectedBlog)
   })
 })
