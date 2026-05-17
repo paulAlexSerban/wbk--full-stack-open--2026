@@ -2,9 +2,10 @@ const mongoose = require('mongoose')
 const { describe, test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
-const app = require('../src/app') // Your Express app export
+const app = require('../src/app')
 const api = supertest(app)
 const Blog = require('../src/models/blog')
+
 const initBlogs = [
   {
     title:
@@ -45,12 +46,10 @@ beforeEach(async () => {
 
 describe('when there is initially some blogs saved', () => {
   test('blogs are returned as json', async () => {
-    const response = await api
+    await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
-
-    console.log({ body: response.body })
   })
 
   test('blogs are returned as json and correct amount is fetched', async () => {
@@ -60,6 +59,15 @@ describe('when there is initially some blogs saved', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(response.body.length, initBlogs.length)
+  })
+
+  test('blogs have a unique identifier named id instead of _id', async () => {
+    const response = await api.get('/api/blogs').expect(200)
+    const firstBlog = response.body[0]
+
+    assert.notStrictEqual(firstBlog.id, undefined)
+    assert.strictEqual(firstBlog._id, undefined)
+    assert.strictEqual(firstBlog.__v, undefined)
   })
 })
 
