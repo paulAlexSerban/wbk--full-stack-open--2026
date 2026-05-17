@@ -149,3 +149,29 @@ describe('most blogs', () => {
     })
   })
 })
+
+describe('most likes', () => {
+  test('of empty list is null', () => {
+    const result = listHelper.mostLikes([])
+    assert.strictEqual(result, null)
+  })
+
+  test('when list has only one blog, returns that author and their likes', () => {
+    const listWithOneBlog = [blogs[0]]
+    const result = listHelper.mostLikes(listWithOneBlog)
+
+    assert.deepStrictEqual(result, {
+      author: 'Paul Serban',
+      likes: 1
+    })
+  })
+
+  test('of a bigger list finds the author with the overall most likes', () => {
+    const result = listHelper.mostLikes(blogs)
+
+    assert.deepStrictEqual(result, {
+      author: 'Paul Serban',
+      likes: 27
+    })
+  })
+})
