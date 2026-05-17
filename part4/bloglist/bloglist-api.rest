@@ -1,0 +1,37 @@
+@BASE_URL=http://localhost:3001
+# @BASE_URL=
+
+### Get all persons
+GET {{BASE_URL}}/api/blogs
+
+### Create new post
+POST {{BASE_URL}}/api/blogs
+Content-Type: application/json
+
+# {
+#   "title":"Few-Shot Prompt Libraries: How to Build Reusable Examples that Don’t Rot",
+#   "author":"Paul Serban",
+#   "url":"https://paulserban.eu/blog/post/few-shot-prompt-libraries-how-to-build-reusable-examples-that-dont-rot/",
+#   "likes": 0
+# }
+
+# {
+#   "title":"3 Meta-Prompting Patterns for Enterprise-Grade Structured Outputs",
+#   "author":"Paul Serban",
+#   "url":"https://paulserban.eu/blog/post/3-meta-prompting-patterns-for-enterprise-grade-structured-outputs/",
+#   "likes": 0
+# }
+
+# {
+#   "title":"Applying SOLID to prompt engineering: why your prompts violate the single responsibility principle",
+#   "author":"Paul Serban",
+#   "url":"https://paulserban.eu/blog/post/applying-solid-to-prompt-engineering-why-your-prompts-violate-the-single-responsibility-principle/",
+#   "likes": 0
+# }
+
+{
+  "title":"Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification",
+  "author":"Paul Serban",
+  "url":"https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/",
+  "likes": 0
+}
