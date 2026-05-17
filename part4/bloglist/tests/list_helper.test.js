@@ -4,7 +4,7 @@ const listHelper = require('../src/utils/list_helper')
 
 const blogs = [
   {
-    _id: '5a422a851b54a676234d17f7',
+    _id: '5a422a851b54a6734234d17f7',
     'title':'Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/',
@@ -12,7 +12,7 @@ const blogs = [
     __v: 0
   },
   {
-    _id: '5a422aa71b54a676234d17f8',
+    _id: '5a422aa71b54a676234er7f8',
     'title':'Applying SOLID to prompt engineering: why your prompts violate the single responsibility principle',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/applying-solid-to-prompt-engineering-why-your-prompts-violate-the-single-responsibility-principle/',
@@ -20,7 +20,7 @@ const blogs = [
     __v: 0
   },
   {
-    _id: '5a422b3a1b54a676234d17f9',
+    _id: '5a411b3a1b54a676234d17f9',
     'title':'3 Meta-Prompting Patterns for Enterprise-Grade Structured Outputs',
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/3-meta-prompting-patterns-for-enterprise-grade-structured-outputs/',
@@ -33,6 +33,38 @@ const blogs = [
     'author':'Paul Serban',
     'url':'https://paulserban.eu/blog/post/few-shot-prompt-libraries-how-to-build-reusable-examples-that-dont-rot/',
     'likes': 15,
+    __v: 0
+  },
+  {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 7,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  },
+  {
+    _id: '5a422b3a1b54a676234d17f9',
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12,
+    __v: 0
+  },
+  {
+    _id: '5a422ba71b54a676234d17fb',
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2014/12/17/TheTDDHypeSyndrome.html',
+    likes: 0,
     __v: 0
   }
 ]
@@ -57,7 +89,7 @@ describe('total likes', () => {
 
   test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(blogs)
-    assert.strictEqual(result, 27)
+    assert.strictEqual(result, 51)
   })
 
 
@@ -89,5 +121,31 @@ describe('favorite blog', () => {
     }
 
     assert.deepStrictEqual(result, expectedBlog)
+  })
+})
+
+describe('most blogs', () => {
+  test('of empty list is null', () => {
+    const result = listHelper.mostBlogs([])
+    assert.strictEqual(result, null)
+  })
+
+  test('when list has only one blog, returns that author with a count of 1', () => {
+    const listWithOneBlog = [blogs[0]]
+    const result = listHelper.mostBlogs(listWithOneBlog)
+
+    assert.deepStrictEqual(result, {
+      author: 'Paul Serban',
+      blogs: 1
+    })
+  })
+
+  test('of a bigger list finds the author with the most blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+
+    assert.deepStrictEqual(result, {
+      author: 'Paul Serban',
+      blogs: 4
+    })
   })
 })
