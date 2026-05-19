@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   passwordHash: {
     type: String,
-    equired: true
+    required: true
   },
 
   blogs: [
