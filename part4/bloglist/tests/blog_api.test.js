@@ -109,6 +109,32 @@ describe('addition of a new blog', () => {
 
     assert.strictEqual(response.body.likes, 0)
   })
+
+  test('backend responds with 400 Bad Request if title is missing', async () => {
+    const newBlogWithoutTitle = {
+      author: 'Annonymous Author',
+      url: 'https://example.com/missing-title',
+      likes: 3
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogWithoutTitle)
+      .expect(400)
+  })
+
+  test('backend responds with 400 Bad Request if url is missing', async () => {
+    const newBlogWithoutUrl = {
+      title: 'A blog post with missing web address',
+      author: 'Annonymous Author',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogWithoutUrl)
+      .expect(400)
+  })
 })
 
 after(async () => {

@@ -29,9 +29,15 @@ Content-Type: application/json
 #   "likes": 0
 # }
 
+# {
+#   "title":"Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification",
+#   "author":"Paul Serban",
+#   "url":"https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/",
+#   "likes": 0
+# }
+
 {
-  "title":"Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification",
-  "author":"Paul Serban",
-  "url":"https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/",
-  "likes": 0
+  "title": "TDD Harms Architecture",
+  "author": "Robert C. Martin AKA Uncle Bob",
+  "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html"
 }
