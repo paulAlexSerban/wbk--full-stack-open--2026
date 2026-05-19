@@ -71,6 +71,29 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
+describe('addition of a new blog', () => {
+  test('a valid blog can be added', async () => {
+    const newBlog = {
+      title: 'Edge-First Asset Deployment: Beyond the Traditional CDN in 2026',
+      author: 'Paul Serban',
+      url: 'https://paulserban.eu/blog/post/edge-first-asset-deployment-beyond-the-traditional-cdn-in-2026',
+      likes: 12
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, initBlogs.length + 1 )
+
+    const titles = response.body.map(b => b.title)
+    assert.ok(titles.includes('Edge-First Asset Deployment: Beyond the Traditional CDN in 2026'), 'The new blog title should be present in the database')
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
