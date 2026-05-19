@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
+const middleware = require('../utils/middleware')
 const Blog = require('../models/blog')
-const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -16,7 +15,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
   const body = request.body
 
   try {
@@ -24,19 +23,9 @@ blogsRouter.post('/', async (request, response, next) => {
       return response.status(400).end()
     }
 
-    if (!request.token) {
-      return response.status(401).json({ error: 'token missing' })
-    }
-
-    // Decrypt and verify the signature using the app environment secret
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-
-    const user = await User.findById(decodedToken.id)
+    const user = request.user
     if (!user) {
-      return response.status(401).json({ error: 'user matching token not found' })
+      return response.status(401).json({ error: 'token missing or invalid' })
     }
 
     const blog = new Blog({
@@ -58,15 +47,11 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response, next) => {
   try {
-    if (!request.token) {
-      return response.status(401).json({ error: 'token missing' })
-    }
-
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
+    const user = request.user
+    if (!user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
     }
 
     const blog = await Blog.findById(request.params.id)
@@ -74,7 +59,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
       return response.status(404).json({ error: 'blog not found' })
     }
 
-    if (blog.user.toString() !== decodedToken.id.toString()) {
+    if (blog.user.toString() !== user.id.toString()) {
       return response.status(401).json({ error: 'only the creator can delete a blog' })
     }
 
