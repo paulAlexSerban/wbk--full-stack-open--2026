@@ -1,12 +1,48 @@
 @BASE_URL=http://localhost:3001
 # @BASE_URL=
 
-### Get all persons
+### Get all blogs
 GET {{BASE_URL}}/api/blogs
+
+### Get all users
+GET {{BASE_URL}}/api/users
+
+### Create new user
+POST {{BASE_URL}}/api/users
+Content-Type: application/json
+
+# {
+#   "username": "lePaul",
+#   "name": "Paul Serban",
+#   "password": "supersecretpassword"
+# }
+
+# {
+#   "username": "jDoe",
+#   "name": "John Doe",
+#   "password": "supersecretpassword"
+# }
+
+{
+  "username": "janeD",
+  "name": "Jane Doe",
+  "password": "supersecretpassword"
+}
+
+### Login user
+# @name login
+POST {{BASE_URL}}/api/login
+Content-Type: application/json
+
+{
+  "username": "lePaul",
+  "password": "supersecretpassword"
+}
 
 ### Create new post
 POST {{BASE_URL}}/api/blogs
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 # {
 #   "title":"Few-Shot Prompt Libraries: How to Build Reusable Examples that Don’t Rot",
@@ -39,30 +75,22 @@ Content-Type: application/json
 {
   "title": "TDD Harms Architecture",
   "author": "Robert C. Martin AKA Uncle Bob",
-  "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html"
+  "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+  "likes": 0
 }
 
-###
-GET {{BASE_URL}}/api/users
+### Delete a post
+DELETE {{BASE_URL}}/api/blogs/6a0c8136eb8f98b3f6830f55
+Authorization: Bearer {{login.response.body.token}}
 
-###
-POST {{BASE_URL}}/api/users
+### Update a post
+PUT {{BASE_URL}}/api/blogs/6a0cd1f4ae74413afc9e98dd
 Content-Type: application/json
-
-# {
-#   "username": "lePaul",
-#   "name": "Paul Serban",
-#   "password": "supersecretpassword"
-# }
-
-# {
-#   "username": "jDoe",
-#   "name": "John Doe",
-#   "password": "supersecretpassword"
-# }
+Authorization: Bearer {{login.response.body.token}}
 
 {
-  "username": "janeD",
-  "name": "Jane Doe",
-  "password": "supersecretpassword"
+  "title": "TDD Harms Architecture - Updated",
+  "author": "Robert C. Martin AKA Uncle Bob",
+  "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+  "likes": 10
 }
