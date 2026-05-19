@@ -80,11 +80,11 @@ Authorization: Bearer {{login.response.body.token}}
 }
 
 ### Delete a post
-DELETE {{BASE_URL}}/api/blogs/6a0c8136eb8f98b3f6830f55
+DELETE {{BASE_URL}}/api/blogs/REPLACE_WITH_BLOG_ID
 Authorization: Bearer {{login.response.body.token}}
 
 ### Update a post
-PUT {{BASE_URL}}/api/blogs/6a0cd1f4ae74413afc9e98dd
+PUT {{BASE_URL}}/api/blogs/REPLACE_WITH_BLOG_ID
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 

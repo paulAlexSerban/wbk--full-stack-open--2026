@@ -16,15 +16,6 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-// Helper function to extract bearer token cleanly from the authorization headers
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
@@ -33,13 +24,12 @@ blogsRouter.post('/', async (request, response, next) => {
       return response.status(400).end()
     }
 
-    const token = getTokenFrom(request)
-    if (!token) {
+    if (!request.token) {
       return response.status(401).json({ error: 'token missing' })
     }
 
     // Decrypt and verify the signature using the app environment secret
-    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
       return response.status(401).json({ error: 'token invalid' })
     }
