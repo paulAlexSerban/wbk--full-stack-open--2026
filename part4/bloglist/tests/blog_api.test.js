@@ -44,15 +44,8 @@ beforeEach(async () => {
   }
 })
 
-describe('when there is initially some blogs saved', () => {
-  test('blogs are returned as json', async () => {
-    await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-  })
-
-  test('blogs are returned as json and correct amount is fetched', async () => {
+describe('blog api - fetching existing blogs (GET /api/blogs)', () => {
+  test('should return all stored blogs as a json array with the correct total count', async () => {
     const response = await api
       .get('/api/blogs')
       .expect(200)
@@ -61,7 +54,7 @@ describe('when there is initially some blogs saved', () => {
     assert.strictEqual(response.body.length, initBlogs.length)
   })
 
-  test('blogs have a unique identifier named id instead of _id', async () => {
+  test('should map the internal database "_id" field to a cleaner, client-facing "id" attribute and strip metadata', async () => {
     const response = await api.get('/api/blogs').expect(200)
     const firstBlog = response.body[0]
 
@@ -71,8 +64,8 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
-describe('addition of a new blog', () => {
-  test('a valid blog can be added', async () => {
+describe('blog api - creating a new blog (POST /api/blogs)', () => {
+  test('should successfully save a valid blog post to the database and increment the total collection size', async () => {
     const newBlog = {
       title: 'Edge-First Asset Deployment: Beyond the Traditional CDN in 2026',
       author: 'Paul Serban',
@@ -87,18 +80,20 @@ describe('addition of a new blog', () => {
       .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, initBlogs.length + 1 )
+    assert.strictEqual(response.body.length, initBlogs.length + 1)
 
     const titles = response.body.map(b => b.title)
-    assert.ok(titles.includes('Edge-First Asset Deployment: Beyond the Traditional CDN in 2026'), 'The new blog title should be present in the database')
+    assert.ok(
+      titles.includes('Edge-First Asset Deployment: Beyond the Traditional CDN in 2026'),
+      'the persistence layer should contain the newly created blog post title'
+    )
   })
 
-  test('if the likes property is missing, it defaults to 0', async () => {
+  test('should automatically default the "likes" attribute to 0 if it is omitted from the request payload', async () => {
     const newBlogWithoutLikes = {
       title: 'TDD Harms Architecture',
       author: 'Robert C. Martin AKA Uncle Bob',
       url: 'https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
-      // 'likes' property is intentionally missing
     }
 
     const response = await api
@@ -110,9 +105,9 @@ describe('addition of a new blog', () => {
     assert.strictEqual(response.body.likes, 0)
   })
 
-  test('backend responds with 400 Bad Request if title is missing', async () => {
+  test('should reject the creation request with status code 400 Bad Request if the "title" property is missing', async () => {
     const newBlogWithoutTitle = {
-      author: 'Annonymous Author',
+      author: 'Anonymous Author',
       url: 'https://example.com/missing-title',
       likes: 3
     }
@@ -123,10 +118,10 @@ describe('addition of a new blog', () => {
       .expect(400)
   })
 
-  test('backend responds with 400 Bad Request if url is missing', async () => {
+  test('should reject the creation request with status code 400 Bad Request if the "url" property is missing', async () => {
     const newBlogWithoutUrl = {
       title: 'A blog post with missing web address',
-      author: 'Annonymous Author',
+      author: 'Anonymous Author',
       likes: 1
     }
 
@@ -137,8 +132,8 @@ describe('addition of a new blog', () => {
   })
 })
 
-describe('deletion of a blog', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
+describe('blog api - removing an individual blog (DELETE /api/blogs/:id)', () => {
+  test('should remove the targeted blog from the system and return status code 204 No Content when given a valid ID', async () => {
     const responseAtStart = await api.get('/api/blogs')
     const blogToDelete = responseAtStart.body[0]
 
@@ -150,12 +145,15 @@ describe('deletion of a blog', () => {
     assert.strictEqual(responseAtEnd.body.length, responseAtStart.body.length - 1)
 
     const titles = responseAtEnd.body.map(r => r.title)
-    assert.ok(!titles.includes(blogToDelete.title), 'The deleted blog title should not be in the database')
+    assert.ok(
+      !titles.includes(blogToDelete.title),
+      'the database collection should no longer contain the removed blog post'
+    )
   })
 })
 
-describe('updating a blog', () => {
-  test('succeeds in updating the likes count of an existing blog', async () => {
+describe('blog api - modifying an individual blog (PUT /api/blogs/:id)', () => {
+  test('should correctly update the "likes" metrics of a specific blog and persist mutations securely', async () => {
     const responseAtStart = await api.get('/api/blogs')
     const blogToUpdate = responseAtStart.body[0]
 
@@ -173,7 +171,6 @@ describe('updating a blog', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(resultResponse.body.likes, blogToUpdate.likes + 10)
-
     const responseAtEnd = await api.get('/api/blogs')
     const updatedBlogInDb = responseAtEnd.body.find(b => b.id === blogToUpdate.id)
 
