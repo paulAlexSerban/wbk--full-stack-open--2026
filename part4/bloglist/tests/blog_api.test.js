@@ -92,6 +92,23 @@ describe('addition of a new blog', () => {
     const titles = response.body.map(b => b.title)
     assert.ok(titles.includes('Edge-First Asset Deployment: Beyond the Traditional CDN in 2026'), 'The new blog title should be present in the database')
   })
+
+  test('if the likes property is missing, it defaults to 0', async () => {
+    const newBlogWithoutLikes = {
+      title: 'TDD Harms Architecture',
+      author: 'Robert C. Martin AKA Uncle Bob',
+      url: 'https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html'
+      // 'likes' property is intentionally missing
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlogWithoutLikes)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, 0)
+  })
 })
 
 after(async () => {
