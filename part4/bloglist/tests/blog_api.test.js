@@ -5,6 +5,7 @@ const supertest = require('supertest')
 const app = require('../src/app')
 const api = supertest(app)
 const Blog = require('../src/models/blog')
+const User = require('../src/models/user')
 
 const initBlogs = [
   {
@@ -37,11 +38,25 @@ const initBlogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const testUser = new User({
+    username: 'testadmin',
+    name: 'Test Administrator',
+    passwordHash: 'dummyhash'
+  })
+  const savedUser = await testUser.save()
 
   for (let blogData of initBlogs) {
-    let blogObj = new Blog(blogData)
-    await blogObj.save()
+    let blogObj = new Blog({
+      ...blogData,
+      user: savedUser.id
+    })
+    const savedBlog = await blogObj.save()
+
+    savedUser.blogs = savedUser.blogs.concat(savedBlog.id)
   }
+  await savedUser.save()
 })
 
 describe('blog api - fetching existing blogs (GET /api/blogs)', () => {

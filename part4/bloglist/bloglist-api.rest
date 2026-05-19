@@ -41,3 +41,28 @@ Content-Type: application/json
   "author": "Robert C. Martin AKA Uncle Bob",
   "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html"
 }
+
+###
+GET {{BASE_URL}}/api/users
+
+###
+POST {{BASE_URL}}/api/users
+Content-Type: application/json
+
+# {
+#   "username": "lePaul",
+#   "name": "Paul Serban",
+#   "password": "supersecretpassword"
+# }
+
+# {
+#   "username": "jDoe",
+#   "name": "John Doe",
+#   "password": "supersecretpassword"
+# }
+
+{
+  "username": "janeD",
+  "name": "Jane Doe",
+  "password": "supersecretpassword"
+}

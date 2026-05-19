@@ -1,23 +1,71 @@
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog
+    .find({})
+    .populate('user',
+      {
+        username: 1,
+        name: 1
+      }
+    )
+
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
+// Helper function to extract bearer token cleanly from the authorization headers
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
-  })
+  try {
+    if (!body.title || !body.url) {
+      return response.status(400).end()
+    }
 
-  const savedBlog = await blog.save()
-  response.status(201).json(savedBlog)
+    const token = getTokenFrom(request)
+    if (!token) {
+      return response.status(401).json({ error: 'token missing' })
+    }
+
+    // Decrypt and verify the signature using the app environment secret
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+    if (!user) {
+      return response.status(401).json({ error: 'user matching token not found' })
+    }
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes ?? 0,
+      user: user.id // Tie document relation to the confirmed user ID
+    })
+
+    const savedBlog = await blog.save()
+
+    user.blogs = user.blogs.concat(savedBlog.id)
+    await user.save()
+
+    response.status(201).json(savedBlog)
+  } catch (error) {
+    next(error)
+  }
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
