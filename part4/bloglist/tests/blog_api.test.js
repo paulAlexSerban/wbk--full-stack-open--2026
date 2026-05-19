@@ -6,6 +6,9 @@ const app = require('../src/app')
 const api = supertest(app)
 const Blog = require('../src/models/blog')
 const User = require('../src/models/user')
+const jwt = require('jsonwebtoken')
+
+let token;
 
 const initBlogs = [
   {
@@ -46,6 +49,13 @@ beforeEach(async () => {
     passwordHash: 'dummyhash'
   })
   const savedUser = await testUser.save()
+
+  const userForToken = {
+    username: savedUser.username,
+    id: savedUser.id,
+  }
+
+  token = jwt.sign(userForToken, process.env.SECRET)
 
   for (let blogData of initBlogs) {
     let blogObj = new Blog({
@@ -90,6 +100,7 @@ describe('blog api - creating a new blog (POST /api/blogs)', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -113,6 +124,7 @@ describe('blog api - creating a new blog (POST /api/blogs)', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlogWithoutLikes)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -129,6 +141,7 @@ describe('blog api - creating a new blog (POST /api/blogs)', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlogWithoutTitle)
       .expect(400)
   })
@@ -142,8 +155,27 @@ describe('blog api - creating a new blog (POST /api/blogs)', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlogWithoutUrl)
       .expect(400)
+  })
+
+  test('should fail with status code 401 Unauthorized if a token is not provided', async () => {
+    const newBlog = {
+      title: 'This should fail',
+      author: 'Anonymous',
+      url: 'http://fail.com',
+      likes: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, initBlogs.length)
   })
 })
 
@@ -154,6 +186,7 @@ describe('blog api - removing an individual blog (DELETE /api/blogs/:id)', () =>
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const responseAtEnd = await api.get('/api/blogs')
