@@ -35,7 +35,7 @@ POST {{BASE_URL}}/api/login
 Content-Type: application/json
 
 {
-  "username": "lePaul",
+  "username": "janeD",
   "password": "supersecretpassword"
 }
 
@@ -65,26 +65,26 @@ Authorization: Bearer {{login.response.body.token}}
 #   "likes": 0
 # }
 
-# {
-#   "title":"Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification",
-#   "author":"Paul Serban",
-#   "url":"https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/",
-#   "likes": 0
-# }
-
 {
-  "title": "TDD Harms Architecture",
-  "author": "Robert C. Martin AKA Uncle Bob",
-  "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+  "title":"Chain-of-Validation: Engineering Reliable AI Systems Through Iterative Self-Verification",
+  "author":"Paul Serban",
+  "url":"https://paulserban.eu/blog/post/chain-of-validation-engineering-reliable-ai-systems-through-iterative-self-verification/",
   "likes": 0
 }
+
+# {
+#   "title": "TDD Harms Architecture",
+#   "author": "Robert C. Martin AKA Uncle Bob",
+#   "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+#   "likes": 0
+# }
 
 ### Delete a post
 DELETE {{BASE_URL}}/api/blogs/REPLACE_WITH_BLOG_ID
 Authorization: Bearer {{login.response.body.token}}
 
 ### Update a post
-PUT {{BASE_URL}}/api/blogs/REPLACE_WITH_BLOG_ID
+PUT {{BASE_URL}}/api/blogs/6a0cdcc7a321ae35b1201afa
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
@@ -92,5 +92,5 @@ Authorization: Bearer {{login.response.body.token}}
   "title": "TDD Harms Architecture - Updated",
   "author": "Robert C. Martin AKA Uncle Bob",
   "url": "https://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-  "likes": 10
+  "likes": 13
 }
