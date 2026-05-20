@@ -3,7 +3,7 @@
 This document provides a short summary of all the exercises/challenges in Part 4 of the Full Stack Open course.
 
 ## 4.1 - 4.2: Application Structure and Routing
-* **4.1 Blog list, step 1:** Initialize the project as an npm project, set up Express, start the server, and add Nodemon for a better development experience.
+* **4.1 Blog list, step 1:** Initialize the project as an npm project, set up Express, start the server, and use `node --watch` for a better development experience.
 * **4.2 Blog list, step 2:** Refactor the application into separate modules. Move routes to controllers, database schema to models, and extract configuration/logging to utils.
 
 ## 4.3 - 4.7: Helper Functions and Unit Tests
