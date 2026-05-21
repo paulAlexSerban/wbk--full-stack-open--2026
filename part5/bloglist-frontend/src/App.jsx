@@ -79,6 +79,20 @@ const App = () => {
     }
   }
 
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id)
+
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        notify(`Deleted blog "${blog.title}" successfully`)
+      } catch (exception) {
+        const errorMessage = exception.response?.data?.error || 'Failed to delete blog'
+        notify(errorMessage, 'error')
+      }
+    }
+  }
+
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
@@ -137,7 +151,13 @@ const App = () => {
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLike={() => handleLike(blog)}
+            handleDelete={() => handleDelete(blog)}
+            currentUser={user}
+          />
         ))}
     </div>
   )
