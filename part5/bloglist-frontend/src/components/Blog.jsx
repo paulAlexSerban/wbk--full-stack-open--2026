@@ -1,44 +1,42 @@
-import { useState } from 'react'
-
 const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
-  const [visible, setVisible] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+  if (!blog) {
+    return <p>Loading blog post data...</p>
   }
 
   const showDeleteButton = currentUser && blog.user && currentUser.username === blog.user.username
 
   return (
-    <div style={blogStyle} className="blog">
-      <div className="blog__summary">
-        {blog.title} {blog.author}
-        <button onClick={() => setVisible(!visible)}>
-          {visible ? 'hide' : 'view'}
-        </button>
-      </div>
-      {visible && (
-        <div className="blog__details">
-          <div>{blog.url}</div>
-          <div>
-            likes {blog.likes} <button onClick={handleLike}>like</button>
-          </div>
-          <div>{blog.user?.name || blog.user?.username}</div>
+    <div className="blog__view">
+      <h2>{blog.title}</h2>
 
-          {showDeleteButton && (
+      <div className="blog__details">
+        <div>
+          <a href={blog.url} target="_blank" rel="noopener noreferrer">
+            {blog.url}
+          </a>
+        </div>
+
+        <div>
+          <strong>likes {blog.likes}</strong>{' '}
+          {currentUser && (
+            <button onClick={handleLike}>like</button>
+          )}
+        </div>
+
+        <div>
+          added by {blog.user?.name || blog.user?.username || 'unknown user'}
+        </div>
+
+        {showDeleteButton && (
+          <div>
             <button
               onClick={handleDelete}
-              style={{ backgroundColor: 'red', color: 'white', borderRadius: '4px', cursor: 'pointer' }}
             >
               remove
             </button>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
