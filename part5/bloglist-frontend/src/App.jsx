@@ -1,5 +1,6 @@
 import { useState, useEffect,  useRef, } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Container, Box, Typography, TextField, Button } from '@mui/material'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -170,14 +171,60 @@ const App = () => {
         } />
 
         <Route path="/login" element={
-          <div>
-            <h2>Log in to application</h2>
-            <form onSubmit={handleLogin}>
-              <div>username <input type="text" name="Username" value={username} onChange={({ target }) => setUsername(target.value)} /></div>
-              <div>password <input type="password" name="Password" value={password} onChange={({ target }) => setPassword(target.value)} /></div>
-              <button type="submit">login</button>
-            </form>
-          </div>
+          <Container maxWidth="xs">
+            <Box
+              sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: 3,
+                boxShadow: 3,
+                borderRadius: 2,
+                backgroundColor: 'background.paper'
+              }}
+            >
+              <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+                Log in to application
+              </Typography>
+
+              <Box component="form" onSubmit={handleLogin} noValidate sx={{ width: '100%' }}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  autoFocus
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={({ target }) => setPassword(target.value)}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Login
+                </Button>
+              </Box>
+            </Box>
+          </Container>
         } />
       </Routes>
     </div>

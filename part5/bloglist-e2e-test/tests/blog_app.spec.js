@@ -48,8 +48,8 @@ describe("Blog app", () => {
     const loginHeader = page.getByText("log in to application");
     await expect(loginHeader).toBeVisible();
 
-    const usernameInput = page.locator('input[name="Username"]');
-    const passwordInput = page.locator('input[name="Password"]');
+    const usernameInput = page.locator('input[name="username"]');
+    const passwordInput = page.locator('input[name="password"]');
     const loginButton = page.getByRole("button", { name: "login" });
 
     await expect(usernameInput).toBeVisible();
@@ -62,10 +62,10 @@ describe("Blog app", () => {
       await page.getByRole("link", { name: "login" }).click();
 
       await page
-        .locator('input[name="Username"]')
+        .locator('input[name="username"]')
         .fill(TEST_USER_DATA[0].username);
       await page
-        .locator('input[name="Password"]')
+        .locator('input[name="password"]')
         .fill(TEST_USER_DATA[0].password);
       await page.getByRole("button", { name: "login" }).click();
 
@@ -78,9 +78,9 @@ describe("Blog app", () => {
       await page.getByRole("link", { name: "login" }).click();
 
       await page
-        .locator('input[name="Username"]')
+        .locator('input[name="username"]')
         .fill(TEST_USER_DATA[0].username);
-      await page.locator('input[name="Password"]').fill("wrongpassword");
+      await page.locator('input[name="password"]').fill("wrongpassword");
       await page.getByRole("button", { name: "login" }).click();
 
       const errorNotification = page.locator(".error");
@@ -99,10 +99,10 @@ describe("Blog app", () => {
     beforeEach(async ({ page }) => {
       await page.getByRole("link", { name: "login" }).click();
       await page
-        .locator('input[name="Username"]')
+        .locator('input[name="username"]')
         .fill(TEST_USER_DATA[0].username);
       await page
-        .locator('input[name="Password"]')
+        .locator('input[name="password"]')
         .fill(TEST_USER_DATA[0].password);
       await page.getByRole("button", { name: "login" }).click();
       await expect(
@@ -114,9 +114,9 @@ describe("Blog app", () => {
       await page.getByRole("link", { name: "create new" }).click();
       await page.getByRole("button", { name: "new blog" }).click();
 
-      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[0].title);
-      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[0].author);
-      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[0].url);
+      await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
+      await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
+      await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
 
       await page.getByRole("button", { name: "create" }).click();
 
@@ -135,9 +135,9 @@ describe("Blog app", () => {
     test("a blog can be liked", async ({ page }) => {
       await page.getByRole("link", { name: "create new" }).click();
       await page.getByRole("button", { name: "new blog" }).click();
-      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[0].title);
-      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[0].author);
-      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[0].url);
+      await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
+      await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
+      await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
       await page.getByRole("button", { name: "create" }).click();
 
       await page
@@ -159,9 +159,9 @@ describe("Blog app", () => {
     }) => {
       await page.getByRole("link", { name: "create new" }).click();
       await page.getByRole("button", { name: "new blog" }).click();
-      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[0].title);
-      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[0].author);
-      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[0].url);
+      await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
+      await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
+      await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
       await page.getByRole("button", { name: "create" }).click();
 
       await page
@@ -200,18 +200,18 @@ describe("Blog app", () => {
     }) => {
       await page.getByRole("link", { name: "login" }).click();
       await page
-        .locator('input[name="Username"]')
+        .locator('input[name="username"]')
         .fill(TEST_USER_DATA[0].username);
       await page
-        .locator('input[name="Password"]')
+        .locator('input[name="password"]')
         .fill(TEST_USER_DATA[0].password);
       await page.getByRole("button", { name: "login" }).click();
 
       await page.getByRole("link", { name: "create new" }).click();
       await page.getByRole("button", { name: "new blog" }).click();
-      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[0].title);
-      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[0].author);
-      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[0].url);
+      await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
+      await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
+      await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
       await page.getByRole("button", { name: "create" }).click();
 
       await page
@@ -224,10 +224,10 @@ describe("Blog app", () => {
       await page.getByRole("button", { name: "logout" }).click();
       await page.getByRole("link", { name: "login" }).click();
       await page
-        .locator('input[name="Username"]')
+        .locator('input[name="username"]')
         .fill(TEST_USER_DATA[1].username);
       await page
-        .locator('input[name="Password"]')
+        .locator('input[name="password"]')
         .fill(TEST_USER_DATA[1].password);
       await page.getByRole("button", { name: "login" }).click();
 
@@ -247,18 +247,18 @@ describe("Blog app", () => {
   test("blogs are sorted descending by number of likes", async ({ page }) => {
     await page.getByRole("link", { name: "login" }).click();
     await page
-      .locator('input[name="Username"]')
+      .locator('input[name="username"]')
       .fill(TEST_USER_DATA[0].username);
     await page
-      .locator('input[name="Password"]')
+      .locator('input[name="password"]')
       .fill(TEST_USER_DATA[0].password);
     await page.getByRole("button", { name: "login" }).click();
 
     await page.getByRole("link", { name: "create new" }).click();
     await page.getByRole("button", { name: "new blog" }).click();
-    await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[0].title);
-    await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[0].author);
-    await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[0].url);
+    await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
+    await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
+    await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
     await page.getByRole("button", { name: "create" }).click();
 
     await expect(
@@ -269,9 +269,9 @@ describe("Blog app", () => {
 
     await page.getByRole("link", { name: "create new" }).click();
     await page.getByRole("button", { name: "new blog" }).click();
-    await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[1].title);
-    await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[1].author);
-    await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[1].url);
+    await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[1].title);
+    await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[1].author);
+    await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[1].url);
     await page.getByRole("button", { name: "create" }).click();
 
     await expect(
@@ -282,9 +282,9 @@ describe("Blog app", () => {
 
     await page.getByRole("link", { name: "create new" }).click();
     await page.getByRole("button", { name: "new blog" }).click();
-    await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA[2].title);
-    await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA[2].author);
-    await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA[2].url);
+    await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[2].title);
+    await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[2].author);
+    await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[2].url);
     await page.getByRole("button", { name: "create" }).click();
 
     await expect(

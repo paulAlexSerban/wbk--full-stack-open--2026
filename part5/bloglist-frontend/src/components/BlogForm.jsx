@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Box, Typography, TextField, Button } from '@mui/material'
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
@@ -19,39 +20,62 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <div>
-      <h2>create new blog</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      noValidate
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        maxWidth: 400,
+        mt: 2,
+        mb: 2
+      }}
+    >
+      <Typography component="h2" variant="h5">
+        Create new blog
+      </Typography>
+
+      <TextField
+        required
+        fullWidth
+        label="Title"
+        name="title"
+        variant="outlined"
+        value={title}
+        onChange={({ target }) => setTitle(target.value)}
+      />
+
+      <TextField
+        required
+        fullWidth
+        label="Author"
+        name="author"
+        variant="outlined"
+        value={author}
+        onChange={({ target }) => setAuthor(target.value)}
+      />
+
+      <TextField
+        required
+        fullWidth
+        label="URL"
+        name="url"
+        variant="outlined"
+        value={url}
+        onChange={({ target }) => setUrl(target.value)}
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ alignSelf: 'flex-start', px: 4 }}
+      >
+        Create
+      </Button>
+    </Box>
   )
 }
 
