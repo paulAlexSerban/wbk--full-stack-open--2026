@@ -56,4 +56,32 @@ describe('<Blog />', () => {
     expect(detailsDiv).toHaveTextContent('likes 1')
     expect(detailsDiv).toHaveTextContent('Paul Serban QA')
   })
+
+  test('ensures that if the like button is clicked twice, the event handler is called twice', async () => {
+    const blog = {
+      title: 'Handle event callbacks for testing',
+      author: 'John Doe Test Guru',
+      url: 'https://paulserban.eu/blog/callbacks',
+      likes: 7,
+      user: {
+        username: 'le_paul_spies_on_callbacks',
+        name: 'Le Mock Tester'
+      }
+    }
+
+    const mockLikeHandler = vi.fn()
+
+    render(<Blog blog={blog} handleLike={mockLikeHandler} />)
+
+    const user = userEvent.setup()
+
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockLikeHandler).toHaveBeenCalledTimes(2)
+  })
 })
