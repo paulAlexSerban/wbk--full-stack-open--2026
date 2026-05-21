@@ -5,13 +5,14 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-
-
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: globals.browser,
+      globals:       {
+        ...globals.browser,
+        ...globals.vitest
+      },
       parserOptions: {
         ecmaFeatures: { jsx: true },
         sourceType: 'module'
