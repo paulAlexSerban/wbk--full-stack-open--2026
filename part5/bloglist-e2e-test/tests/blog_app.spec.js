@@ -6,6 +6,12 @@ const TEST_USER_DATA = {
   name: "Test User",
 };
 
+const TEST_USER_DATA_TWO = {
+  username: "secondary_user",
+  password: "anothersecretpassword",
+  name: "Jane Doe",
+};
+
 const TEST_BLOG_DATA = {
   title: "End-2-end Testing with Playwright is a must have",
   author: "Le Paul Official",
@@ -130,6 +136,104 @@ describe("Blog app", () => {
       await expect(blogContainer.locator(".blog__details")).toBeVisible();
       await blogContainer.getByRole("button", { name: "like" }).click();
       await expect(blogContainer).toContainText("likes 1");
+    });
+
+    test("a blog can be deleted by the user who created it", async ({
+      page,
+    }) => {
+      const createFormButton = page.getByRole("button", { name: "new blog" });
+      if (await createFormButton.isVisible()) {
+        await createFormButton.click();
+      }
+
+      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA.title);
+      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA.author);
+      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA.url);
+      await page.getByRole("button", { name: "create" }).click();
+
+      const blogContainer = page
+        .locator(".blog")
+        .filter({ hasText: TEST_BLOG_DATA.title });
+
+      await blogContainer.getByRole("button", { name: "view" }).click();
+
+      page.on("dialog", async (dialog) => {
+        expect(dialog.message()).toContain(
+          `Remove blog "${TEST_BLOG_DATA.title}" by ${TEST_BLOG_DATA.author}`,
+        );
+        await dialog.accept();
+      });
+
+      await blogContainer.getByRole("button", { name: "remove" }).click();
+
+      await expect(blogContainer).not.toBeVisible();
+      await expect(
+        page.getByText(`${TEST_BLOG_DATA.title} ${TEST_BLOG_DATA.author}`),
+      ).not.toBeVisible();
+    });
+  });
+
+  describe("Blog visibility permissions", () => {
+    beforeEach(async ({ request }) => {
+      await request.post("http://localhost:3001/api/users", {
+        data: TEST_USER_DATA_TWO,
+      });
+    });
+
+    test("only the user who created the blog sees its delete button", async ({
+      page,
+    }) => {
+      await page
+        .locator('input[name="Username"]')
+        .fill(TEST_USER_DATA.username);
+      await page
+        .locator('input[name="Password"]')
+        .fill(TEST_USER_DATA.password);
+
+      await page.getByRole("button", { name: "login" }).click();
+
+      await expect(
+        page.getByText(`${TEST_USER_DATA.name} logged in`),
+      ).toBeVisible();
+
+      const createFormButton = page.getByRole("button", { name: "new blog" });
+      if (await createFormButton.isVisible()) {
+        await createFormButton.click();
+      }
+      await page.locator('input[name="Title"]').fill(TEST_BLOG_DATA.title);
+      await page.locator('input[name="Author"]').fill(TEST_BLOG_DATA.author);
+      await page.locator('input[name="Url"]').fill(TEST_BLOG_DATA.url);
+      await page.getByRole("button", { name: "create" }).click();
+
+      let blogContainer = page
+        .locator(".blog")
+        .filter({ hasText: TEST_BLOG_DATA.title });
+      await blogContainer.getByRole("button", { name: "view" }).click();
+      await expect(
+        blogContainer.getByRole("button", { name: "remove" }),
+      ).toBeVisible();
+
+      await page.getByRole("button", { name: "logout" }).click();
+
+      await page
+        .locator('input[name="Username"]')
+        .fill(TEST_USER_DATA_TWO.username);
+      await page
+        .locator('input[name="Password"]')
+        .fill(TEST_USER_DATA_TWO.password);
+      await page.getByRole("button", { name: "login" }).click();
+      await expect(
+        page.getByText(`${TEST_USER_DATA_TWO.name} logged in`),
+      ).toBeVisible();
+
+      blogContainer = page
+        .locator(".blog")
+        .filter({ hasText: TEST_BLOG_DATA.title });
+      await blogContainer.getByRole("button", { name: "view" }).click();
+
+      await expect(
+        blogContainer.getByRole("button", { name: "remove" }),
+      ).not.toBeVisible();
     });
   });
 });
