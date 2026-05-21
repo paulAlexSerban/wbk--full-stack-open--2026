@@ -1,6 +1,14 @@
-import { useState, useEffect,  useRef, } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
-import { Container, Box, Typography, TextField, Button } from '@mui/material'
+import {
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  AppBar,
+  Toolbar,
+} from '@mui/material'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -19,7 +27,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs))
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -34,7 +42,7 @@ const App = () => {
 
   const match = useMatch('/blogs/:id')
   const matchedBlog = match
-    ? blogs.find(blog => blog.id === match.params.id)
+    ? blogs.find((blog) => blog.id === match.params.id)
     : null
 
   const notify = (message, type = 'success') => {
@@ -48,13 +56,21 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
-      const fullBlogData = { ...returnedBlog, user: { username: user.username, name: user.name, id: returnedBlog.user } }
+      const fullBlogData = {
+        ...returnedBlog,
+        user: {
+          username: user.username,
+          name: user.name,
+          id: returnedBlog.user,
+        },
+      }
 
       setBlogs(blogs.concat(fullBlogData))
       notify(`a new blog "${blogObject.title}" by ${blogObject.author} added`)
       navigate('/')
     } catch (exception) {
-      const errorMessage = exception.response?.data?.error || 'Failed to create blog'
+      const errorMessage =
+        exception.response?.data?.error || 'Failed to create blog'
       notify(errorMessage, 'error')
     }
   }
@@ -64,7 +80,7 @@ const App = () => {
     try {
       const user = await loginService.login({
         username,
-        password
+        password,
       })
 
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
@@ -95,10 +111,13 @@ const App = () => {
         likes: blog.likes + 1,
         author: blog.author,
         title: blog.title,
-        url: blog.url
+        url: blog.url,
       }
-      const returnedBlog = await blogService.update(blog.id, updatedBlogPayload)
-      setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
+      const returnedBlog = await blogService.update(
+        blog.id,
+        updatedBlogPayload,
+      )
+      setBlogs(blogs.map((b) => (b.id === blog.id ? returnedBlog : b)))
     } catch {
       notify('Failed to update likes', 'error')
     }
@@ -108,126 +127,200 @@ const App = () => {
     if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
       try {
         await blogService.remove(blog.id)
-        setBlogs(blogs.filter(b => b.id !== blog.id))
+        setBlogs(blogs.filter((b) => b.id !== blog.id))
         notify(`Deleted blog "${blog.title}" successfully`)
         navigate('/')
       } catch (exception) {
-        const errorMessage = exception.response?.data?.error || 'Failed to delete blog'
+        const errorMessage =
+          exception.response?.data?.error || 'Failed to delete blog'
         notify(errorMessage, 'error')
       }
     }
   }
 
-
-
   return (
-    <div>
-      <div >
-        <Link to="/">blogs</Link>
-        {user && <Link to="/create">create new</Link>}
-        {user ? (
-          <span>
-            <em>{user.name} logged in</em>{' '}
-            <button onClick={handleLogout}>logout</button>
-          </span>
-        ) : (
-          <Link to="/login">login</Link>
-        )}
-      </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" color="default" elevation={1}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button component={Link} to="/" color="inherit">
+              blogs
+            </Button>
+            {user && (
+              <Button component={Link} to="/create" color="inherit">
+                create new
+              </Button>
+            )}
+          </Box>
 
-      <Notification message={notification.message} type={notification.type} />
-      <h2>blog app</h2>
-
-      <Routes>
-        <Route path="/" element={
-          <div>
-            {[...blogs]
-              .sort((a, b) => b.likes - a.likes)
-              .map((blog) => (
-                <div key={blog.id}>
-                  <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
-                </div>
-              ))}
-          </div>
-        } />
-
-        <Route path="/create" element={
-          user ? (
-            <Togglable buttonLabel="new blog" ref={blogFormRef}>
-              <BlogForm createBlog={handleCreate} />
-            </Togglable>
-          ) : (
-            <div>Please log in to manage blog posts.</div>
-          )
-        } />
-
-        <Route path="/blogs/:id" element={
-          <Blog
-            blog={matchedBlog}
-            handleLike={() => handleLike(matchedBlog)}
-            handleDelete={() => handleDelete(matchedBlog)}
-            currentUser={user}
-          />
-        } />
-
-        <Route path="/login" element={
-          <Container maxWidth="xs">
-            <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: 3,
-                boxShadow: 3,
-                borderRadius: 2,
-                backgroundColor: 'background.paper'
-              }}
-            >
-              <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-                Log in to application
-              </Typography>
-
-              <Box component="form" onSubmit={handleLogin} noValidate sx={{ width: '100%' }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
-                  autoFocus
-                  value={username}
-                  onChange={({ target }) => setUsername(target.value)}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 3, mb: 2 }}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {user ? (
+              <>
+                <Typography
+                  variant="body2"
+                  sx={{ fontStyle: 'italic', color: 'text.secondary' }}
                 >
-                  Login
+                  {user.name} logged in
+                </Typography>
+                <Button
+                  onClick={handleLogout}
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                >
+                  logout
                 </Button>
+              </>
+            ) : (
+              <Button
+                component={Link}
+                to="/login"
+                variant="contained"
+                size="small"
+                color="primary"
+              >
+                login
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="md" sx={{ mt: 4 }}>
+        <Notification message={notification.message} type={notification.type} />
+
+        <Typography
+          variant="h3"
+          component="h1"
+          sx={{ mb: 4, fontWeight: 'bold', color: 'primary.main' }}
+        >
+          blog app
+        </Typography>
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {[...blogs]
+                  .sort((a, b) => b.likes - a.likes)
+                  .map((blog) => (
+                    <Box
+                      key={blog.id}
+                      sx={{
+                        p: 2,
+                        border: '1px solid #e0e0e0',
+                        borderRadius: 1,
+                        '&:hover': { backgroundColor: '#f9f9f9' },
+                      }}
+                    >
+                      <Link
+                        to={`/blogs/${blog.id}`}
+                        style={{
+                          textDecoration: 'none',
+                          color: '#1976d2',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {blog.title} by {blog.author}
+                      </Link>
+                    </Box>
+                  ))}
               </Box>
-            </Box>
-          </Container>
-        } />
-      </Routes>
-    </div>
+            }
+          />
+
+          <Route
+            path="/create"
+            element={
+              user ? (
+                <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                  <BlogForm createBlog={handleCreate} />
+                </Togglable>
+              ) : (
+                <div>Please log in to manage blog posts.</div>
+              )
+            }
+          />
+
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                blog={matchedBlog}
+                handleLike={() => handleLike(matchedBlog)}
+                handleDelete={() => handleDelete(matchedBlog)}
+                currentUser={user}
+              />
+            }
+          />
+
+          <Route
+            path="/login"
+            element={
+              <Container maxWidth="xs">
+                <Box
+                  sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    padding: 3,
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    backgroundColor: 'background.paper',
+                  }}
+                >
+                  <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+                    Log in to application
+                  </Typography>
+
+                  <Box
+                    component="form"
+                    onSubmit={handleLogin}
+                    noValidate
+                    sx={{ width: '100%' }}
+                  >
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      name="username"
+                      autoComplete="username"
+                      autoFocus
+                      value={username}
+                      onChange={({ target }) => setUsername(target.value)}
+                    />
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={({ target }) => setPassword(target.value)}
+                    />
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Login
+                    </Button>
+                  </Box>
+                </Box>
+              </Container>
+            }
+          />
+        </Routes>
+      </Container>
+    </Box>
   )
 }
 
