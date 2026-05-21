@@ -6,7 +6,7 @@ import {
   Button,
   Box,
   Chip,
-  Link as MuiLink,
+  Link,
   CircularProgress,
 } from '@mui/material'
 
@@ -48,7 +48,7 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
           sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}
         >
           <div>
-            <MuiLink
+            <Link
               href={blog.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -60,7 +60,7 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
               }}
             >
               {blog.url}
-            </MuiLink>
+            </Link>
           </div>
 
           <Box

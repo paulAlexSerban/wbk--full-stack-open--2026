@@ -15,7 +15,7 @@ describe('<BlogForm />', () => {
     const submitButton = screen.getByRole('button', { name: /create/i })
 
     await user.type(titleInput, 'Component integration testing in React')
-    await user.type(authorInput, 'Pal Serban Integrates')
+    await user.type(authorInput, 'Paul Serban Integrates')
     await user.type(urlInput, 'https://paulserban.eu/blog/component-integrations-in-react')
 
     await user.click(submitButton)
@@ -23,7 +23,7 @@ describe('<BlogForm />', () => {
     expect(createBlogMock).toHaveBeenCalledTimes(1)
     expect(createBlogMock.mock.calls[0][0]).toEqual({
       title: 'Component integration testing in React',
-      author: 'Pal Serban Integrates',
+      author: 'Paul Serban Integrates',
       url: 'https://paulserban.eu/blog/component-integrations-in-react'
     })
   })

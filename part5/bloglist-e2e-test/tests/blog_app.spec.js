@@ -31,7 +31,7 @@ const TEST_BLOG_DATA = [
   }
 ];
 
-describe("Blog app", () => {
+describe("blog app", () => {
   beforeEach(async ({ page, request }) => {
     await request.post("http://localhost:3001/api/testing/reset");
     await request.post("http://localhost:3001/api/users", {
@@ -57,7 +57,7 @@ describe("Blog app", () => {
     await expect(loginButton).toBeVisible();
   });
 
-  describe("Login validation paths", () => {
+  describe("login validation paths", () => {
     test("succeeds with correct credentials", async ({ page }) => {
       await page.getByRole("link", { name: "login" }).click();
 
@@ -95,7 +95,7 @@ describe("Blog app", () => {
     });
   });
 
-  describe("When logged in", () => {
+  describe("when logged in", () => {
     beforeEach(async ({ page }) => {
       await page.getByRole("link", { name: "login" }).click();
       await page
@@ -185,7 +185,7 @@ describe("Blog app", () => {
     });
   });
 
-  describe("Blog visibility permissions and cross-account restriction profiles", () => {
+  describe("blog visibility permissions and cross-account restriction profiles", () => {
     beforeEach(async ({ request }) => {
       await request.post("http://localhost:3001/api/users", {
         data: TEST_USER_DATA[1],
