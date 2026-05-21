@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const Blog = ({ blog, handleLike }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
