@@ -63,6 +63,23 @@ const App = () => {
     setUser(null)
   }
 
+  const handleLike = async (blog) => {
+  try {
+    const updatedBlogPayload = {
+      user: blog.user.id || blog.user,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    }
+
+    const returnedBlog = await blogService.update(blog.id, updatedBlogPayload)
+    setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
+  } catch {
+    notify('Failed to update likes', 'error')
+  }
+}
+
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
@@ -117,9 +134,13 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+{blogs.map(blog =>
+  <Blog 
+    key={blog.id} 
+    blog={blog} 
+    handleLike={() => handleLike(blog)}
+  />
+)}
     </div>
   )
 }

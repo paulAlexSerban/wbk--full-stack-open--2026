@@ -8,7 +8,7 @@ const Blog = require('../src/models/blog')
 const User = require('../src/models/user')
 const jwt = require('jsonwebtoken')
 
-let token;
+let token
 
 const initBlogs = [
   {
@@ -209,7 +209,8 @@ describe('blog api - modifying an individual blog (PUT /api/blogs/:id)', () => {
       title: blogToUpdate.title,
       author: blogToUpdate.author,
       url: blogToUpdate.url,
-      likes: blogToUpdate.likes + 10
+      likes: blogToUpdate.likes + 10,
+      user: blogToUpdate.user.id
     }
 
     const resultResponse = await api
@@ -219,9 +220,12 @@ describe('blog api - modifying an individual blog (PUT /api/blogs/:id)', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(resultResponse.body.likes, blogToUpdate.likes + 10)
+
+    assert.strictEqual(typeof resultResponse.body.user, 'object')
+    assert.strictEqual(resultResponse.body.user.id, blogToUpdate.user.id)
+
     const responseAtEnd = await api.get('/api/blogs')
     const updatedBlogInDb = responseAtEnd.body.find(b => b.id === blogToUpdate.id)
-
     assert.strictEqual(updatedBlogInDb.likes, blogToUpdate.likes + 10)
   })
 })
