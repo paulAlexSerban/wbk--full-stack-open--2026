@@ -21,7 +21,13 @@ const create = async newObject => {
 }
 
 const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject)
+  const sanitized = {
+    ...newObject,
+    user: typeof newObject.user === 'object'
+      ? (newObject.user.id || newObject.user._id)
+      : newObject.user
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, sanitized)
   return response.data
 }
 
