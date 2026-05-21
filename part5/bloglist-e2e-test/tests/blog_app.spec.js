@@ -112,7 +112,6 @@ describe("Blog app", () => {
 
     test("a new blog can be created", async ({ page }) => {
       await page.getByRole("link", { name: "create new" }).click();
-      await page.getByRole("button", { name: "new blog" }).click();
 
       await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
       await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
@@ -134,7 +133,6 @@ describe("Blog app", () => {
 
     test("a blog can be liked", async ({ page }) => {
       await page.getByRole("link", { name: "create new" }).click();
-      await page.getByRole("button", { name: "new blog" }).click();
       await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
       await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
       await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
@@ -148,17 +146,16 @@ describe("Blog app", () => {
 
       const detailsContainer = page.locator(".blog__details");
       await expect(detailsContainer).toBeVisible();
-      await expect(detailsContainer).toContainText("likes 0");
+      await expect(detailsContainer).toContainText("likes: 0");
 
       await page.getByRole("button", { name: "like" }).click();
-      await expect(detailsContainer).toContainText("likes 1");
+      await expect(detailsContainer).toContainText("likes: 1");
     });
 
     test("a blog can be deleted by the user who created it", async ({
       page,
     }) => {
       await page.getByRole("link", { name: "create new" }).click();
-      await page.getByRole("button", { name: "new blog" }).click();
       await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
       await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
       await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
@@ -208,7 +205,6 @@ describe("Blog app", () => {
       await page.getByRole("button", { name: "login" }).click();
 
       await page.getByRole("link", { name: "create new" }).click();
-      await page.getByRole("button", { name: "new blog" }).click();
       await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
       await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
       await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
@@ -255,7 +251,6 @@ describe("Blog app", () => {
     await page.getByRole("button", { name: "login" }).click();
 
     await page.getByRole("link", { name: "create new" }).click();
-    await page.getByRole("button", { name: "new blog" }).click();
     await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[0].title);
     await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[0].author);
     await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[0].url);
@@ -268,7 +263,6 @@ describe("Blog app", () => {
     ).toBeVisible();
 
     await page.getByRole("link", { name: "create new" }).click();
-    await page.getByRole("button", { name: "new blog" }).click();
     await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[1].title);
     await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[1].author);
     await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[1].url);
@@ -281,7 +275,6 @@ describe("Blog app", () => {
     ).toBeVisible();
 
     await page.getByRole("link", { name: "create new" }).click();
-    await page.getByRole("button", { name: "new blog" }).click();
     await page.locator('input[name="title"]').fill(TEST_BLOG_DATA[2].title);
     await page.locator('input[name="author"]').fill(TEST_BLOG_DATA[2].author);
     await page.locator('input[name="url"]').fill(TEST_BLOG_DATA[2].url);
@@ -299,9 +292,9 @@ describe("Blog app", () => {
       })
       .click();
     await page.getByRole("button", { name: "like" }).click();
-    await page.locator('.blog__details:has-text("likes 1")').waitFor();
+    await page.locator('.blog__details:has-text("likes: 1")').waitFor();
     await page.getByRole("button", { name: "like" }).click();
-    await page.locator('.blog__details:has-text("likes 2")').waitFor();
+    await page.locator('.blog__details:has-text("likes: 2")').waitFor();
     await page.getByRole("link", { name: "blogs" }).click();
 
     await page
@@ -310,11 +303,11 @@ describe("Blog app", () => {
       })
       .click();
     await page.getByRole("button", { name: "like" }).click();
-    await page.locator('.blog__details:has-text("likes 1")').waitFor();
+    await page.locator('.blog__details:has-text("likes: 1")').waitFor();
     await page.getByRole("button", { name: "like" }).click();
-    await page.locator('.blog__details:has-text("likes 2")').waitFor();
+    await page.locator('.blog__details:has-text("likes: 2")').waitFor();
     await page.getByRole("button", { name: "like" }).click();
-    await page.locator('.blog__details:has-text("likes 3")').waitFor();
+    await page.locator('.blog__details:has-text("likes: 3")').waitFor();
     await page.getByRole("link", { name: "blogs" }).click();
 
     const blogLinks = page.locator('a[href^="/blogs/"]');

@@ -21,7 +21,7 @@ describe('<Blog />', () => {
 
     expect(screen.getByText(TEST_DATA_BLOG.title)).toBeInTheDocument()
     expect(screen.getByText(TEST_DATA_BLOG.url)).toBeInTheDocument()
-    expect(screen.getByText(/likes 12/)).toBeInTheDocument()
+    expect(screen.getByText(/likes: 12/)).toBeInTheDocument()
     expect(screen.getByText(/added by Paul Serban/)).toBeInTheDocument()
 
     const buttons = container.querySelectorAll('button')
@@ -35,7 +35,7 @@ describe('<Blog />', () => {
     }
 
     render(<Blog blog={TEST_DATA_BLOG} currentUser={regularUser} />)
-    expect(screen.getByText(/likes 12/)).toBeInTheDocument()
+    expect(screen.getByText(/likes: 12/)).toBeInTheDocument()
 
     const likeButton = screen.getByRole('button', { name: /like/i })
     expect(likeButton).toBeInTheDocument()

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 import {
   Container,
@@ -24,7 +24,6 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const navigate = useNavigate()
-  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -54,7 +53,6 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     try {
-      blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
       const fullBlogData = {
         ...returnedBlog,
@@ -229,18 +227,23 @@ const App = () => {
             }
           />
 
-          <Route
-            path="/create"
-            element={
-              user ? (
-                <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                  <BlogForm createBlog={handleCreate} />
-                </Togglable>
-              ) : (
-                <div>Please log in to manage blog posts.</div>
-              )
-            }
-          />
+          <Route path="/create" element={
+            <Container maxWidth="sm">
+              <Box
+                sx={{
+                  marginTop: 6,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: 4,
+                  boxShadow: 2,
+                  borderRadius: 2,
+                  backgroundColor: 'background.paper'
+                }}
+              >
+                <BlogForm createBlog={handleCreate} />
+              </Box>
+            </Container>
+          } />
 
           <Route
             path="/blogs/:id"

@@ -8,6 +8,11 @@ const BlogForm = ({ createBlog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    console.log({
+      title,
+      author,
+      url,
+    })
     createBlog({
       title,
       author,
