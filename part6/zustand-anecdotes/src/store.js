@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const anecdotes = [
+const initialContent = [
   "If it hurts, do it more often.",
   "Adding manpower to a late software project makes it later!",
   "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
@@ -11,31 +11,30 @@ const anecdotes = [
   "The only way to go fast, is to go well.",
 ];
 
+const anecdotes = initialContent.map((content, id) => ({ content, id, votes: 0 }));
+
 const useAnecdotesStore = create((set) => ({
   anecdotes,
-  selected: 0,
-  votes: new Array(anecdotes.length).fill(0),
+  
   actions: {
-    vote: () =>
-      set((state) => {
-        const votes = [...state.votes];
-        votes[state.selected] += 1;
-        return { votes };
-      }),
-    nextAnecdote: () =>
+    vote: (id) =>
       set((state) => ({
-        selected: Math.floor(Math.random() * state.anecdotes.length),
+        anecdotes: state.anecdotes.map((anecdote) =>
+          anecdote.id === id
+            ? { ...anecdote, votes: anecdote.votes + 1 }
+            : anecdote,
+        ),
       })),
     createAnecdote: (content) =>
-      set((state) => ({
-        anecdotes: state.anecdotes.concat(content),
-        votes: state.votes.concat(0),
-      })),
+      set((state) => {
+        const id = Math.max(...state.anecdotes.map((a) => a.id), -1) + 1;
+        return {
+          anecdotes: state.anecdotes.concat({ content, id, votes: 0 }),
+        };
+      }),
   },
 }));
 
 export const useAnecdotes = () => useAnecdotesStore((state) => state.anecdotes);
-export const useSelected = () => useAnecdotesStore((state) => state.selected);
-export const useVotes = () => useAnecdotesStore((state) => state.votes);
 export const useAnecdotesActions = () =>
   useAnecdotesStore((state) => state.actions);
