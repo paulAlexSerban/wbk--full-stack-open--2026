@@ -26,6 +26,11 @@ const useAnecdotesStore = create((set) => ({
       set((state) => ({
         selected: Math.floor(Math.random() * state.anecdotes.length),
       })),
+    createAnecdote: (content) =>
+      set((state) => ({
+        anecdotes: state.anecdotes.concat(content),
+        votes: state.votes.concat(0),
+      })),
   },
 }));
 

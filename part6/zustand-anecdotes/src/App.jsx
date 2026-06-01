@@ -9,7 +9,14 @@ const App = () => {
   const anecdotes = useAnecdotes();
   const selected = useSelected();
   const votes = useVotes();
-  const { vote, nextAnecdote } = useAnecdotesActions();
+  const { vote, nextAnecdote, createAnecdote } = useAnecdotesActions();
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    const content = event.target.anecdote.value;
+    event.target.anecdote.value = "";
+    createAnecdote(content);
+  };
 
   const maxVotes = Math.max(...votes);
   const mostVotesIndex = votes.indexOf(maxVotes);
@@ -31,6 +38,12 @@ const App = () => {
           <p>has {maxVotes} votes</p>
         </div>
       )}
+
+      <h2>create a new anecdote</h2>
+      <form onSubmit={handleCreate}>
+        <input name="anecdote" />
+        <button type="submit">create</button>
+      </form>
     </div>
   );
 };
