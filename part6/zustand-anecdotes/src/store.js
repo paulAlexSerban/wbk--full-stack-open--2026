@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import anecdoteService from "./services/anecdotes";
 
 const useAnecdotesStore = create((set) => ({
   anecdotes: [],
@@ -14,15 +15,12 @@ const useAnecdotesStore = create((set) => ({
             : anecdote,
         ),
       })),
-    createAnecdote: (content) =>
-      set((state) => {
-        const id = String(
-          Math.max(...state.anecdotes.map((a) => Number(a.id)), 0) + 1,
-        );
-        return {
-          anecdotes: state.anecdotes.concat({ content, id, votes: 0 }),
-        };
-      }),
+    createAnecdote: async (content) => {
+      const newAnecdote = await anecdoteService.createNew(content);
+      set((state) => ({
+        anecdotes: state.anecdotes.concat(newAnecdote),
+      }));
+    },
   },
 }));
 
