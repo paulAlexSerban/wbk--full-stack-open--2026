@@ -1,10 +1,11 @@
-import { useVoteAnecdote } from "../hooks/useAnecdoteActions";
+import { useVoteAnecdote, useRemoveAnecdote } from "../hooks/useAnecdoteActions";
 import { useAnecdotes, useFilter } from "../store";
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes();
   const filter = useFilter();
   const vote = useVoteAnecdote();
+  const removeAnecdote = useRemoveAnecdote();
 
   const filteredAnecdotes = anecdotes.filter((anecdote) =>
     anecdote.content.toLowerCase().includes(filter.toLowerCase()),
@@ -21,6 +22,9 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>has {anecdote.votes} votes</div>
           <button onClick={() => vote(anecdote)}>vote</button>
+          {anecdote.votes === 0 && (
+            <button onClick={() => removeAnecdote(anecdote)}>remove</button>
+          )}
         </div>
       ))}
     </div>

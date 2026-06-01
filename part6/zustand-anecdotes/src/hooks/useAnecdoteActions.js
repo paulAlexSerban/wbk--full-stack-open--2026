@@ -26,3 +26,13 @@ export const useCreateAnecdote = () => {
     setNotification(newAnecdote.content);
   };
 };
+
+export const useRemoveAnecdote = () => {
+  const { removeAnecdote } = useAnecdotesActions();
+  const { setNotification } = useNotificationActions();
+
+  return async (anecdote) => {
+    await removeAnecdote(anecdote);
+    setNotification(anecdote.content);
+  };
+};

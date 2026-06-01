@@ -26,6 +26,15 @@ const useAnecdotesStore = create((set) => ({
       }));
       return newAnecdote;
     },
+    removeAnecdote: async (anecdote) => {
+      if (anecdote.votes > 0) {
+        return;
+      }
+      await anecdoteService.remove(anecdote.id);
+      set((state) => ({
+        anecdotes: state.anecdotes.filter((a) => a.id !== anecdote.id),
+      }));
+    },
   },
 }));
 
