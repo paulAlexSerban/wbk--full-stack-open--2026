@@ -1,14 +1,15 @@
-import { useAnecdotes, useAnecdotesActions, useFilter } from "../store";
+import { useVoteAnecdote } from "../hooks/useAnecdoteActions";
+import { useAnecdotes, useFilter } from "../store";
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes();
   const filter = useFilter();
-  const { vote } = useAnecdotesActions();
+  const vote = useVoteAnecdote();
 
   const filteredAnecdotes = anecdotes.filter((anecdote) =>
     anecdote.content.toLowerCase().includes(filter.toLowerCase()),
   );
-  
+
   const sortedAnecdotes = filteredAnecdotes.toSorted(
     (a, b) => b.votes - a.votes,
   );

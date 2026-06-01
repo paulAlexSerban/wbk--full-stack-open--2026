@@ -24,11 +24,11 @@ const useAnecdotesStore = create((set) => ({
       set((state) => ({
         anecdotes: state.anecdotes.concat(newAnecdote),
       }));
+      return newAnecdote;
     },
   },
 }));
 
 export const useAnecdotes = () => useAnecdotesStore((state) => state.anecdotes);
 export const useFilter = () => useAnecdotesStore((state) => state.filter);
-export const useAnecdotesActions = () =>
-  useAnecdotesStore((state) => state.actions);
+export const useAnecdotesActions = () => useAnecdotesStore((state) => state.actions);
